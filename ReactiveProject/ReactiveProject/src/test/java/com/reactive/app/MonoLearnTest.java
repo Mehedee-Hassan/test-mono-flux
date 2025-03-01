@@ -6,6 +6,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.function.Consumer;
 
@@ -26,7 +27,16 @@ public class MonoLearnTest {
         });
 
 
+        Mono<String> testMono1 = Mono.just("test string 1");
+        Mono<String> testMono2 = Mono.just("test string 1");
 
+        Mono<Tuple2<String,String>> combinedMono
+                = Mono.zip(testMono1,testMono2);
+
+        combinedMono.subscribe(data->{
+            System.out.println(data.getT1());
+            System.out.println(data.getT2());
+    });
 
 
 
