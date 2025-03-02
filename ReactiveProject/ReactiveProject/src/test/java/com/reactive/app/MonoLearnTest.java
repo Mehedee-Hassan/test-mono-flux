@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.boot.test.context.SpringBootTest;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
@@ -36,8 +37,31 @@ public class MonoLearnTest {
         combinedMono.subscribe(data->{
             System.out.println(data.getT1());
             System.out.println(data.getT2());
-    });
+        });
 
+        Mono<String[]> resultFlatMap =
+                testMono1
+                        .flatMap(value1
+                                -> Mono
+                                .just(
+                                        value1
+                                        .split(" ")
+                                )).log();
+        resultFlatMap.subscribe(data -> {
+            System.out.println(data);
+            for (var test :
+                    data) {
+                System.out.println(test);
+            }
+        });
+
+        System.out.println("------------flux---------");
+
+        Flux<String> stringFlux = testMono1.flatMapMany(value1 -> Flux.just(value1.split(" "))).log();
+//      here not single value so not String[]
+        stringFlux.subscribe(data -> {
+            System.out.println(data);
+        });
 
 
 
